@@ -111,10 +111,11 @@
                             if (s_accion.equals("E")) {
                                 consulta =  "   delete from editorial "
                                             + " where "
-                                            + " ideditorial = " + s_ideditorial + "; ";
-                                //out.print(consulta);
+                                            + " ideditorial = "+ s_ideditorial +";";
+                                
                                 pst = cn.prepareStatement(consulta);
                                 pst.executeUpdate();
+                                //out.println(consulta);
                                 
                         /* PARA INSERTAR */
                         
@@ -122,10 +123,11 @@
                                 s_nombre = request.getParameter("f_nombre");
                                 s_estado = request.getParameter("f_estado");
                                 consulta =  "   insert into "
-                                            + " editorial(nombre, f_estado) "
-                                            + " values ('"+ s_nombre +"','"+ s_estado +"')";
+                                            + " editorial(nombre, estado) "
+                                            + "  values('"+ s_nombre +"','"+ s_estado +"')";
                                 //out.print(consulta);
                                 pst = cn.prepareStatement(consulta);
+                                //out.println(consulta);
                                 pst.executeUpdate();
                             }
                         }
@@ -153,7 +155,7 @@
             </tr>
 
             <%
-                c++;
+                
                     }
                     
                     rs.close();

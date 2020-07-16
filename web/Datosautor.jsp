@@ -107,7 +107,7 @@
                             if (s_accion.equals("E")) {
                                 consulta =  "   delete from autor "
                                             + " where "
-                                            + " idautor = " + s_idautor + "; ";
+                                            + " idautor = " + s_idautor + " ";
                                 //out.print(consulta);
                                 pst = cn.prepareStatement(consulta);
                                 pst.executeUpdate();
@@ -117,8 +117,8 @@
                             }else if (s_accion.equals("C")) {
                                 s_nombre = request.getParameter("f_nombre");
                                 s_f_nacimiento = request.getParameter("f_nacimiento");
-                                consulta =  "   insert into "
-                                            + " autor(nombre, f_nacimiento) "
+                                consulta =  "insert into "
+                                            + " autor(nombre,f_nacimiento) "
                                             + " values ('"+ s_nombre +"','"+ s_f_nacimiento +"')";
                                 //out.print(consulta);
                                 pst = cn.prepareStatement(consulta);
@@ -126,7 +126,7 @@
                             }
                         }
                         
-                        consulta = "select nombre, f_nacimiento from autor order by nombre asc";
+                        consulta = "select idautor, nombre, f_nacimiento from autor order by nombre asc";
                         pst = cn.prepareStatement(consulta);
                         rs = pst.executeQuery();
                         
@@ -140,15 +140,15 @@
                         <tr>
 
                             <td><%out.println(c);%></td>
-                            <td><%out.println(rs.getString(1));%></td>
                             <td><%out.println(rs.getString(2));%></td>
+                            <td><%out.println(rs.getString(3));%></td>
                             <td><a href="Datosautor.jsp?f_accion=E&f_idautor=<%out.print(ide);%>"><font color="white"><i class="fas fa-trash-alt"></i></font></a></td>
                             <td>Editar</td>
                         </tr>
 
 
             <%
-                c++;
+                
                     }
                     
                     rs.close();

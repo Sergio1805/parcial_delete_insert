@@ -116,7 +116,7 @@
                                 s_nombre = request.getParameter("f_nombre");
                                 s_estado = request.getParameter("f_estado");
                                 consulta =  "   insert into "
-                                            + " pais(nombre, f_estado) "
+                                            + " pais(nombre, estado) "
                                             + " values ('"+ s_nombre +"','"+ s_estado +"')";
                                 //out.print(consulta);
                                 pst = cn.prepareStatement(consulta);
@@ -144,7 +144,7 @@
             </tr>
 
             <%
-                c++;
+               
                     }
                     
                     rs.close();
