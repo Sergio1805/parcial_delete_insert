@@ -15,6 +15,13 @@
             Connection cn;
             PreparedStatement pst;
             ResultSet rs;
+            
+            /* NUEVAS VARIABLES */
+            
+            String s_accion;
+            String s_idpais;
+            String s_nombre;
+            String s_estado;
         %>
     </head>
       <!-- TABLA DEL MENÚ SUPERIOR -->
@@ -36,6 +43,40 @@
         </table>
     </div>
       
+    <!---------------------------- AGREGAR ---------------------------->
+      <div id="cuadro2" align="center">
+        <table width="500" align="center" cellspacing="0" bgcolor="#D0D0D0">
+            <tbody id="subtitulo1" align="center" ><font face="calibri"> 
+            <form name="AgregarPaisForm" action="Datospais.jsp" method="GET">
+                <table border="0" align="center">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Agregar País</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nombre: </td>
+                            <td><input type="text" name="f_nombre" value="" maxlength="30" size="20" /></td>
+                        </tr>
+                        <tr>
+                            <td>Estado: </td>
+                            <td><input type="text" name="f_estado" value="" maxlength="40" size="20" /></td>
+                        </tr>
+                        <tr align="center">
+                            <td colspan="2">
+                                <input type="submit" value="Agregar" name="f_agregar" />
+                                <input type="hidden" value="C" name="f_accion" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>  
+            </font></tbody>
+        </table>
+    </div>
+    <!-------------------------------------------------------------------------------->
+      
     <div align = "center" id="cuadro2">
     <body align = "center"><font face="calibri"> 
         <table border="1" cellspacing="1" cellpadding="1" align = "center">
@@ -44,7 +85,8 @@
                     <th>Nro</th>
                     <th>Nombre</th>
                     <th>Estado</th>
-                    <th>Acción</th>
+                    <th>Eliminar</th>
+                    <th>Editar</th>
                 </tr>
             </thead>
             <tbody align = "center">
@@ -53,19 +95,52 @@
                     try {
                         ConectaBd bd = new ConectaBd();
                         cn = bd.getConnection();
+                        
+                        s_accion = request.getParameter("f_accion");
+                        s_idpais= request.getParameter("f_idpais");
+                                               
+                        /* PARA ELIMINAR */
+                        
+                        if (s_accion!=null) {
+                            if (s_accion.equals("E")) {
+                                consulta =  "   delete from pais "
+                                            + " where "
+                                            + " idpais = " + s_idpais + "; ";
+                                //out.print(consulta);
+                                pst = cn.prepareStatement(consulta);
+                                pst.executeUpdate();
+                                
+                        /* PARA INSERTAR */
+                        
+                            }else if (s_accion.equals("C")) {
+                                s_nombre = request.getParameter("f_nombre");
+                                s_estado = request.getParameter("f_estado");
+                                consulta =  "   insert into "
+                                            + " pais(nombre, f_estado) "
+                                            + " values ('"+ s_nombre +"','"+ s_estado +"')";
+                                //out.print(consulta);
+                                pst = cn.prepareStatement(consulta);
+                                pst.executeUpdate();
+                            }
+                        }
+                        
+                        
                         consulta = "select idpais, nombre, estado from pais order by nombre asc";
                         pst = cn.prepareStatement(consulta);
                         rs = pst.executeQuery();
-                        int c=1;
+                        int c=0;
+                        String ide;
                         while (rs.next()) {
+                            ide = rs.getString(1);
+                            c++;
                 %>       
             <tr>
             
                 <td><%out.println(c);%></td>
                 <td><%out.println(rs.getString(2));%></td>
                 <td><%out.println(rs.getString(3));%></td>
-                <td><a href="eliminarpais.jsp?id=<%out.println(c);%>"><font color="white"><i class="fas fa-trash-alt"></i></font></a></td>
-           
+                <td><a href="Datospais.jsp?f_accion=E&f_idpais=<%out.print(ide);%>"><font color="white"><i class="fas fa-trash-alt"></i></font></a></td>
+                <td>Editar</td>
             </tr>
 
             <%
@@ -88,13 +163,14 @@
     </table>
       <!-- BOTÓN AGREGAR -->
       <table>
+          <!-- BOTÓN AGREGAR 
             <tr align = "center">
                 <td><font size="80"><a href="agregar.jsp"><font color="white"><i class="fas fa-plus-circle"></i></i></font></a></font></td>
             </tr>
             <tr>
                 <td>AGREGAR</td> 
             </tr>
-            </table>
+            </table>-->
       </font></body></div>
 </html>
 

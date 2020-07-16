@@ -19,6 +19,13 @@
             Connection cn;
             PreparedStatement pst;
             ResultSet rs;
+            
+            /* NUEVAS VARIABLES */
+            
+            String s_accion;
+            String s_idautor;
+            String s_nombre;
+            String s_f_nacimiento;
         %>
     </head>
       <!-- TABLA DEL MENÚ SUPERIOR -->
@@ -39,7 +46,40 @@
                 </tbody>
         </table>
     </div>
-    
+      
+    <!---------------------------- AGREGAR ---------------------------->
+      <div id="cuadro2" align="center">
+        <table width="500" align="center" cellspacing="0" bgcolor="#D0D0D0">
+            <tbody id="subtitulo1" align="center" ><font face="calibri"> 
+            <form name="AgregarAutorForm" action="Datosautor.jsp" method="GET">
+                <table border="0" align="center">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Agregar Autor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nombre: </td>
+                            <td><input type="text" name="f_nombre" value="" maxlength="30" size="20" /></td>
+                        </tr>
+                        <tr>
+                            <td>Nacimiento: </td>
+                            <td><input type="text" name="f_nacimiento" value="" maxlength="40" size="20" /></td>
+                        </tr>
+                        <tr align="center">
+                            <td colspan="2">
+                                <input type="submit" value="Agregar" name="f_agregar" />
+                                <input type="hidden" value="C" name="f_accion" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>  
+            </font></tbody>
+        </table>
+    </div>
+    <!-------------------------------------------------------------------------------->
     <div id="cuadro2" align = "center">
         <body align = "center"><font face="calibri"> 
         <table border="1" cellspacing="1" cellpadding="1" align = "center" >
@@ -47,8 +87,9 @@
                 <tr>
                     <th>Nro</th>
                     <th>Nombre</th>
-                    <th>F_nacimiento</th>
-                    <th>Acción</th>
+                    <th>Nacimiento</th>
+                    <th>Eliminar</th>
+                    <th>Editar</th>
                 </tr>
             </thead>
             <tbody align = "center">
@@ -57,21 +98,54 @@
                     try {
                         ConectaBd bd = new ConectaBd();
                         cn = bd.getConnection();
+                        s_accion = request.getParameter("f_accion");
+                        s_idautor= request.getParameter("f_idautor");
+                        
+                        /* PARA ELIMINAR */
+                        
+                        if (s_accion!=null) {
+                            if (s_accion.equals("E")) {
+                                consulta =  "   delete from autor "
+                                            + " where "
+                                            + " idautor = " + s_idautor + "; ";
+                                //out.print(consulta);
+                                pst = cn.prepareStatement(consulta);
+                                pst.executeUpdate();
+                                
+                        /* PARA INSERTAR */
+                        
+                            }else if (s_accion.equals("C")) {
+                                s_nombre = request.getParameter("f_nombre");
+                                s_f_nacimiento = request.getParameter("f_nacimiento");
+                                consulta =  "   insert into "
+                                            + " autor(nombre, f_nacimiento) "
+                                            + " values ('"+ s_nombre +"','"+ s_f_nacimiento +"')";
+                                //out.print(consulta);
+                                pst = cn.prepareStatement(consulta);
+                                pst.executeUpdate();
+                            }
+                        }
+                        
                         consulta = "select nombre, f_nacimiento from autor order by nombre asc";
                         pst = cn.prepareStatement(consulta);
                         rs = pst.executeQuery();
-                        int c=1;
+                        
+                        
+                        int c=0;
+                        String ide;
                         while (rs.next()) {
-                %>       
-            <tr>
-                
-                <td><%out.println(c);%></td>
-                <td><%out.println(rs.getString(1));%></td>
-                <td><%out.println(rs.getString(2));%></td>
-                <td><a href="eliminar.jsp?id=<%out.println(c);%>"><font color="white"><i class="fas fa-trash-alt"></i></font></a></td>
-            
-            </tr>
-            
+                            ide = rs.getString(1);
+                            c++;
+                        %>       
+                        <tr>
+
+                            <td><%out.println(c);%></td>
+                            <td><%out.println(rs.getString(1));%></td>
+                            <td><%out.println(rs.getString(2));%></td>
+                            <td><a href="Datosautor.jsp?f_accion=E&f_idautor=<%out.print(ide);%>"><font color="white"><i class="fas fa-trash-alt"></i></font></a></td>
+                            <td>Editar</td>
+                        </tr>
+
 
             <%
                 c++;
@@ -81,7 +155,7 @@
                     pst.close();
                     cn.close();
                 } catch (Exception e) {
-                    out.println("Error sql");
+                    out.println("Error SQL");
                 }
             %>
             </tr>
@@ -90,15 +164,12 @@
             </tr>
             </tbody>
     </table>
-      <!-- BOTÓN AGREGAR -->
+      <!-- BOTÓN AGREGAR 
       <table>
             <tr align = "center">
                 <td><font size="80"><a href="agregar.jsp"><font color="white"><i class="fas fa-plus-circle"></i></i></font></a></font></td>
             </tr>
-            <tr>
-                <td>AGREGAR</td> 
-            </tr>
-            </table>
+       </table> -->
     </font><body></div>
 
 </html>
